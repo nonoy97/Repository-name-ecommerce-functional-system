@@ -7,26 +7,26 @@ import (
 	"github.com/samber/lo"
 )
 
-// Manejo de Errores (U3)
+// Manejo de Errores
 var (
 	ErrCarritoVacio     = errors.New("el carrito está vacío")
 	ErrCantidadInvalida = errors.New("la cantidad debe ser mayor a cero")
 	ErrCuponInvalido    = errors.New("el cupón sobrepasa el límite permitido (0% - 50%)")
 )
 
-// Interfaz para Impuestos (U3 - Tema 2)
+// Interfaz para Impuestos
 type CalculadorImpuestos interface {
 	Calcular(monto float64) float64
 }
 
-// Implementación IVA Ecuador 15% (U3)
+// Implementación IVA Ecuador 15%
 type ImpuestoEcuador struct{}
 
 func (e ImpuestoEcuador) Calcular(monto float64) float64 {
 	return monto * 0.15
 }
 
-// Implementación Exento de Impuestos (U3 - Polimorfismo)
+// Implementación Exento de Impuestos
 type ImpuestoCero struct{}
 
 func (c ImpuestoCero) Calcular(monto float64) float64 {
@@ -40,7 +40,7 @@ type ItemCarrito struct {
 	Cantidad   int
 }
 
-// Encapsulación (U3)
+// Encapsulación
 type Carrito struct {
 	items          []ItemCarrito
 	cuponDescuento float64
@@ -63,7 +63,12 @@ func NewCarrito(tarifaEnvio float64) Carrito {
 	}
 }
 
-// Setter con validación de error (U3)
+// Getter público para leer los items encapsulados (U3)
+func (c Carrito) Items() []ItemCarrito {
+	return c.items
+}
+
+// Setter con validación de error
 func (c *Carrito) SetCuponDescuento(porcentaje float64) error {
 	if porcentaje < 0.0 || porcentaje > 0.50 {
 		return fmt.Errorf("%w: %.2f%% no es válido", ErrCuponInvalido, porcentaje*100)
@@ -80,7 +85,7 @@ func (c *Carrito) AgregarItem(item ItemCarrito) error {
 	return nil
 }
 
-// Uso polimórfico de la Interfaz (U3)
+// Uso polimórfico de la Interfaz
 func (c Carrito) ProcesarOrden(calcImpuesto CalculadorImpuestos) (ResumenOrden, error) {
 	if len(c.items) == 0 {
 		return ResumenOrden{}, ErrCarritoVacio

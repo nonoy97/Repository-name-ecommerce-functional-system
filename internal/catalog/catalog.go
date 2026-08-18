@@ -1,6 +1,7 @@
 package catalog
 
 import (
+	"encoding/json"
 	"errors"
 	"strings"
 
@@ -17,6 +18,18 @@ type Producto struct {
 	precio     float64
 	stock      int
 	disponible bool
+}
+
+// Implementación de json.Marshaler (U4): Permite convertir atributos privados a JSON
+func (p Producto) MarshalJSON() ([]byte, error) {
+	return json.Marshal(map[string]interface{}{
+		"id":         p.id,
+		"nombre":     p.nombre,
+		"categoria":  p.categoria,
+		"precio":     p.precio,
+		"stock":      p.stock,
+		"disponible": p.disponible,
+	})
 }
 
 // Constructor con validación (U2 - U3)
